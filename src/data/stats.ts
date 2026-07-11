@@ -10,7 +10,7 @@ export const stats: Stat[] = [
     since: careerStartYear,
   },
   {
-    value: '40',
+    value: '50',
     accent: '+',
     label: 'technologies · frontend to infra',
   },

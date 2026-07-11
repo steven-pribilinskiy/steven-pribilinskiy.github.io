@@ -6,7 +6,7 @@ export const experience: ExperienceEntry[] = [
     role: 'Senior Staff Engineer',
     org: 'Cloudbeds',
     description:
-      'myfrontdesk micro-frontend platform: federation architecture, developer experience, and agentic-AI engineering tooling across dozens of production frontends.',
+      'myfrontdesk micro-frontend platform: module-federation architecture and fleet-wide toolchain migrations across dozens of production frontends, AI-assisted engineering tooling, and full-stack product work — React micro-frontends to Symfony and event-driven services to Terraform and Kubernetes.',
   },
   {
     period: '2025 — now',
