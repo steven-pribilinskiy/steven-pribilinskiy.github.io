@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { appearanceMap, defaultVariantId } from '../data/appearance';
 import { contactLinks } from '../data/contact';
 import { identity } from '../data/identity';
 
@@ -27,7 +28,7 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-variant="editorial" data-tone="paper" data-tone-choice="system">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,15 +43,19 @@ const personSchema = {
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline>
+    <script is:inline define:vars={{ appearanceMap, defaultVariantId }}>
       (() => {
-        const choice = localStorage.getItem('theme') ?? 'system';
-        const dark =
-          choice === 'dark' ||
-          (choice === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        const storedVariant = localStorage.getItem('appearance:variant');
+        const variantId = appearanceMap[storedVariant] ? storedVariant : defaultVariantId;
+        const config = appearanceMap[variantId];
+        const choice = localStorage.getItem(`appearance:tone:${variantId}`) ?? 'system';
+        const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+        const toneId = config.schemes[choice] ? choice : config.systemPair[prefersDark ? 1 : 0];
         const root = document.documentElement;
-        root.classList.toggle('dark', dark);
-        root.dataset.theme = choice;
+        root.dataset.variant = variantId;
+        root.dataset.tone = toneId;
+        root.dataset.toneChoice = config.schemes[choice] ? choice : 'system';
+        root.classList.toggle('dark', config.schemes[toneId] === 'dark');
       })();
     </script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />

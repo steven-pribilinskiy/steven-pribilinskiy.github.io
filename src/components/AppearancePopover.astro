@@ -1,0 +1,225 @@
+---
+import { variants } from '../data/appearance';
+---
+
+<button
+  popovertarget="appearance-popover"
+  type="button"
+  class="grid size-9 shrink-0 place-items-center text-muted transition-colors hover:text-ink"
+  aria-label="Appearance settings"
+>
+  <svg
+    class="size-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="3.25"></circle>
+    <path
+      d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.12 3.6V3.5a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.56 1.03h.1a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03Z"
+    ></path>
+  </svg>
+</button>
+
+<div
+  id="appearance-popover"
+  popover
+  class="appearance-popover w-[19.5rem] rounded-window border border-rule bg-surface p-5 text-prose shadow-[0_1px_2px_oklch(21%_0.01_95_/_0.06),0_16px_40px_oklch(21%_0.01_95_/_0.12)]"
+>
+  <p class="font-display text-[15px] font-semibold text-ink">Appearance</p>
+  <p class="mt-1 text-[13px] leading-snug text-muted">
+    Pick a design and a tone. Saved in your browser only.
+  </p>
+
+  <div class="mt-4 flex flex-col gap-1" role="radiogroup" aria-label="Design variant">
+    {
+      variants.map((variant) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-variant-option={variant.id}
+          class="variant-option grid grid-cols-[1rem_1fr] items-baseline gap-x-3 rounded-chip px-2 py-2 text-left transition-colors hover:bg-accent-soft/60"
+        >
+          <span class="radio-dot relative top-[1px] inline-block size-3 rounded-full border border-muted" />
+          <span>
+            <span class="block text-[14px] font-medium text-ink">{variant.label}</span>
+            <span class="block text-[12.5px] leading-snug text-muted">{variant.description}</span>
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="mt-4 border-t border-rule pt-4">
+    {
+      variants.map((variant) => (
+        <div
+          data-tone-group={variant.id}
+          class="tone-group hidden flex-wrap gap-2"
+          role="radiogroup"
+          aria-label={`${variant.label} tone`}
+        >
+          <button
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-tone-option="system"
+            class="tone-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
+          >
+            System
+          </button>
+          {variant.tones.map((tone) => (
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-tone-option={tone.id}
+              class="tone-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
+            >
+              {tone.label}
+            </button>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mt-4 flex items-center justify-between border-t border-rule pt-4">
+    <button
+      type="button"
+      id="appearance-reset"
+      class="font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-accent"
+    >
+      Reset to defaults
+    </button>
+    <span class="font-mono text-[11.5px] text-muted">no cookies</span>
+  </div>
+</div>
+
+<style>
+  .appearance-popover {
+    position: fixed;
+    inset: unset;
+    top: 3.75rem;
+    right: max(0.75rem, calc((100vw - 72rem) / 2));
+    margin: 0;
+  }
+
+  .appearance-popover::backdrop {
+    background: transparent;
+  }
+
+  /* Show only the active variant's tone group. */
+  :global([data-variant='editorial']) .tone-group[data-tone-group='editorial'],
+  :global([data-variant='terminal']) .tone-group[data-tone-group='terminal'],
+  :global([data-variant='blueprint']) .tone-group[data-tone-group='blueprint'] {
+    display: flex;
+  }
+
+  .variant-option[aria-checked='true'] .radio-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: inset 0 0 0 2.5px var(--surface);
+  }
+
+  .tone-chip[aria-checked='true'] {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+</style>
+
+<script>
+  import { appearanceMap, defaultVariantId, storageKeys } from '../data/appearance';
+
+  const root = document.documentElement;
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  const popover = document.getElementById('appearance-popover');
+
+  type VariantConfig = { systemPair: [string, string]; schemes: Record<string, string> };
+  const configFor = (variantId: string) =>
+    (appearanceMap as Record<string, VariantConfig>)[variantId];
+
+  const currentVariant = () => {
+    const stored = localStorage.getItem(storageKeys.variant);
+    return stored && configFor(stored) ? stored : defaultVariantId;
+  };
+
+  const currentChoice = (variantId: string) => {
+    const stored = localStorage.getItem(storageKeys.tone(variantId));
+    return stored && configFor(variantId).schemes[stored] ? stored : 'system';
+  };
+
+  const apply = () => {
+    const variantId = currentVariant();
+    const config = configFor(variantId);
+    const choice = currentChoice(variantId);
+    const toneId =
+      choice === 'system' ? config.systemPair[media.matches ? 1 : 0] : choice;
+    root.dataset.variant = variantId;
+    root.dataset.tone = toneId;
+    root.dataset.toneChoice = choice;
+    root.classList.toggle('dark', config.schemes[toneId] === 'dark');
+    syncControls(variantId, choice);
+  };
+
+  const syncControls = (variantId: string, choice: string) => {
+    for (const option of document.querySelectorAll<HTMLElement>('[data-variant-option]')) {
+      option.setAttribute('aria-checked', String(option.dataset.variantOption === variantId));
+    }
+    const activeGroup = document.querySelector(`[data-tone-group='${variantId}']`);
+    if (!activeGroup) return;
+    for (const chip of activeGroup.querySelectorAll<HTMLElement>('[data-tone-option]')) {
+      chip.setAttribute('aria-checked', String(chip.dataset.toneOption === choice));
+    }
+  };
+
+  for (const option of document.querySelectorAll<HTMLElement>('[data-variant-option]')) {
+    option.addEventListener('click', () => {
+      const variantId = option.dataset.variantOption;
+      if (!variantId) return;
+      localStorage.setItem(storageKeys.variant, variantId);
+      apply();
+    });
+  }
+
+  for (const group of document.querySelectorAll<HTMLElement>('[data-tone-group]')) {
+    const variantId = group.dataset.toneGroup;
+    if (!variantId) continue;
+    for (const chip of group.querySelectorAll<HTMLElement>('[data-tone-option]')) {
+      chip.addEventListener('click', () => {
+        const choice = chip.dataset.toneOption;
+        if (!choice) return;
+        if (choice === 'system') {
+          localStorage.removeItem(storageKeys.tone(variantId));
+        } else {
+          localStorage.setItem(storageKeys.tone(variantId), choice);
+        }
+        apply();
+      });
+    }
+  }
+
+  document.getElementById('appearance-reset')?.addEventListener('click', () => {
+    const staleKeys = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key?.startsWith('appearance:')) staleKeys.push(key);
+    }
+    for (const key of staleKeys) {
+      localStorage.removeItem(key);
+    }
+    apply();
+  });
+
+  media.addEventListener('change', () => {
+    if (currentChoice(currentVariant()) === 'system') apply();
+  });
+
+  popover?.addEventListener('toggle', apply);
+  apply();
+</script>

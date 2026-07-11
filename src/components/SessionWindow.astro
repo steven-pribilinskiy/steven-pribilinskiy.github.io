@@ -48,12 +48,14 @@ const keyPad =
 </figure>
 
 <style is:global>
+  /* Dark tones: ring + deep shadow + a faint accent under-glow (ember on
+     editorial, phosphor on terminal, cyan on blueprint — all token-driven). */
   .dark .session-window {
     position: relative;
     box-shadow:
       0 0 0 1px var(--rule),
       0 20px 50px oklch(0% 0 0 / 0.5),
-      0 8px 60px oklch(70% 0.15 45 / 0.1);
+      0 8px 60px color-mix(in oklab, var(--accent) 10%, transparent);
   }
   .dark .session-window::before {
     content: '';
@@ -61,6 +63,11 @@ const keyPad =
     inset: 0 0 auto 0;
     height: 1px;
     border-radius: var(--radius-window) var(--radius-window) 0 0;
-    background: linear-gradient(90deg, transparent, oklch(70% 0.15 45 / 0.5), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--accent) 50%, transparent),
+      transparent
+    );
   }
 </style>

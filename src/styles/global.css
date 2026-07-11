@@ -3,10 +3,14 @@
 @import "@fontsource-variable/fraunces/opsz-italic.css";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/overpass";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Semantic tokens — light is the default, .dark flips the same names. */
+/* Semantic tokens — editorial/paper is the default; variant+tone selectors
+   flip the same names. --v-* vars are variant-controlled type/shape tokens
+   (they need var indirection because @theme inline bakes literal values
+   into utilities). */
 :root {
   --bg: oklch(97.8% 0.008 92);
   --surface: oklch(99.4% 0.004 92);
@@ -17,9 +21,19 @@
   --accent: oklch(55% 0.19 41);
   --accent-soft: oklch(94% 0.03 55);
   --signal: oklch(52% 0.13 152);
+
+  --v-font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --v-font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --v-text-display: clamp(2.625rem, 1.2rem + 6.5vw, 5.5rem);
+  --v-text-display-lh: 0.98;
+  --v-text-display-tracking: -0.025em;
+  --v-text-title: clamp(1.75rem, 1.2rem + 2.2vw, 2.625rem);
+  --v-text-dek: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+  --v-text-body: 1.0625rem;
+  --v-radius-window: 10px;
 }
 
-.dark {
+[data-variant="editorial"][data-tone="ink"] {
   --bg: oklch(17.5% 0.006 95);
   --surface: oklch(21.5% 0.008 95);
   --ink: oklch(93% 0.012 92);
@@ -29,6 +43,95 @@
   --accent: oklch(70% 0.15 45);
   --accent-soft: oklch(28% 0.05 45);
   --signal: oklch(86% 0.17 152);
+}
+
+/* ---- Terminal variant ---- */
+
+[data-variant="terminal"] {
+  --v-font-display: "JetBrains Mono Variable", ui-monospace, monospace;
+  --v-font-body: "JetBrains Mono Variable", ui-monospace, monospace;
+  --v-text-display: clamp(2rem, 1rem + 4.2vw, 3.875rem);
+  --v-text-display-lh: 1.12;
+  --v-text-display-tracking: -0.01em;
+  --v-text-title: clamp(1.375rem, 1rem + 1.6vw, 2rem);
+  --v-text-dek: clamp(1rem, 0.9rem + 0.6vw, 1.25rem);
+  --v-text-body: 0.9375rem;
+  --v-radius-window: 8px;
+}
+
+[data-variant="terminal"][data-tone="phosphor"] {
+  --bg: oklch(16% 0.008 250);
+  --surface: oklch(20% 0.01 250);
+  --ink: oklch(93% 0.03 150);
+  --prose: oklch(80% 0.055 150);
+  --muted: oklch(64% 0.04 150);
+  --rule: oklch(30% 0.015 250);
+  --accent: oklch(84% 0.17 150);
+  --accent-soft: oklch(30% 0.06 150);
+  --signal: oklch(84% 0.17 150);
+}
+
+[data-variant="terminal"][data-tone="amber"] {
+  --bg: oklch(15% 0.012 65);
+  --surface: oklch(19% 0.015 65);
+  --ink: oklch(92% 0.05 80);
+  --prose: oklch(80% 0.085 75);
+  --muted: oklch(64% 0.065 72);
+  --rule: oklch(30% 0.02 65);
+  --accent: oklch(80% 0.14 70);
+  --accent-soft: oklch(30% 0.06 70);
+  --signal: oklch(80% 0.14 70);
+}
+
+[data-variant="terminal"][data-tone="daylight"] {
+  --bg: oklch(97.5% 0.004 120);
+  --surface: oklch(99% 0.003 120);
+  --ink: oklch(22% 0.015 150);
+  --prose: oklch(37% 0.02 150);
+  --muted: oklch(48% 0.025 150);
+  --rule: oklch(87% 0.01 130);
+  --accent: oklch(48% 0.13 150);
+  --accent-soft: oklch(93% 0.04 150);
+  --signal: oklch(48% 0.13 150);
+}
+
+/* ---- Blueprint variant ---- */
+
+[data-variant="blueprint"] {
+  --v-font-display: "Overpass Variable", ui-sans-serif, system-ui, sans-serif;
+  --v-font-body: "Overpass Variable", ui-sans-serif, system-ui, sans-serif;
+  --v-text-display: clamp(2.375rem, 1.1rem + 5.5vw, 4.75rem);
+  --v-text-display-lh: 1.04;
+  --v-text-display-tracking: -0.02em;
+  --v-radius-window: 2px;
+}
+
+[data-variant="blueprint"][data-tone="drafting"] {
+  --bg: oklch(97.5% 0.006 240);
+  --surface: oklch(99.2% 0.004 240);
+  --ink: oklch(26% 0.06 258);
+  --prose: oklch(38% 0.05 258);
+  --muted: oklch(50% 0.04 255);
+  --rule: oklch(84% 0.025 245);
+  --accent: oklch(48% 0.16 258);
+  --accent-soft: oklch(92% 0.03 245);
+  --signal: oklch(50% 0.12 155);
+  --grid-minor: oklch(94% 0.012 240);
+  --grid-major: oklch(90% 0.018 240);
+}
+
+[data-variant="blueprint"][data-tone="cyanotype"] {
+  --bg: oklch(27% 0.08 258);
+  --surface: oklch(31% 0.08 258);
+  --ink: oklch(97% 0.01 240);
+  --prose: oklch(87% 0.025 245);
+  --muted: oklch(75% 0.04 248);
+  --rule: oklch(43% 0.06 255);
+  --accent: oklch(86% 0.07 220);
+  --accent-soft: oklch(38% 0.07 250);
+  --signal: oklch(85% 0.14 155);
+  --grid-minor: oklch(30.5% 0.078 258);
+  --grid-major: oklch(34% 0.078 258);
 }
 
 @theme inline {
@@ -43,22 +146,22 @@
   --color-accent-soft: var(--accent-soft);
   --color-signal: var(--signal);
 
-  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
-  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--v-font-display);
+  --font-body: var(--v-font-body);
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 
-  --text-display: clamp(2.625rem, 1.2rem + 6.5vw, 5.5rem);
-  --text-display--line-height: 0.98;
-  --text-display--letter-spacing: -0.025em;
-  --text-title: clamp(1.75rem, 1.2rem + 2.2vw, 2.625rem);
+  --text-display: var(--v-text-display);
+  --text-display--line-height: var(--v-text-display-lh);
+  --text-display--letter-spacing: var(--v-text-display-tracking);
+  --text-title: var(--v-text-title);
   --text-title--line-height: 1.08;
   --text-title--letter-spacing: -0.015em;
-  --text-dek: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+  --text-dek: var(--v-text-dek);
   --text-dek--line-height: 1.45;
   --text-entry: 1.375rem;
   --text-entry--line-height: 1.2;
   --text-entry--letter-spacing: -0.01em;
-  --text-body: 1.0625rem;
+  --text-body: var(--v-text-body);
   --text-body--line-height: 1.75;
   --text-small: 0.875rem;
   --text-small--line-height: 1.6;
@@ -70,7 +173,7 @@
   --text-kicker--letter-spacing: 0.22em;
 
   --radius-*: initial;
-  --radius-window: 10px;
+  --radius-window: var(--v-radius-window);
   --radius-chip: 4px;
 
   --spacing-section: clamp(5rem, 3.5rem + 7vw, 8.5rem);
@@ -139,6 +242,18 @@
   }
 }
 
+/* Editorial drop cap — a serif device; other variants render the lede plain. */
+[data-variant="editorial"] .drop-cap::first-letter {
+  float: left;
+  margin-top: 0.08em;
+  padding-right: 0.14em;
+  font-family: var(--font-display);
+  font-size: 4.2em;
+  font-weight: 700;
+  line-height: 0.75;
+  color: var(--accent);
+}
+
 /* Blinking block caret in the session window. */
 @keyframes caret-blink {
   50% {
@@ -196,4 +311,48 @@
   .session-caret {
     animation: none;
   }
+}
+
+/* ---- Variant structural details (kept last: most-specific rules at the end) ---- */
+
+[data-variant="blueprint"] body {
+  background-image:
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size:
+    24px 24px,
+    24px 24px,
+    120px 120px,
+    120px 120px;
+}
+
+[data-variant="blueprint"] h1,
+[data-variant="blueprint"] h2 {
+  text-transform: uppercase;
+  font-weight: 750;
+}
+
+/* Dimension-line ticks on blueprint section rules. */
+[data-variant="blueprint"] .section-rule {
+  position: relative;
+}
+
+[data-variant="blueprint"] .section-rule::before,
+[data-variant="blueprint"] .section-rule::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 8px;
+  background: var(--accent);
+}
+
+[data-variant="blueprint"] .section-rule::before {
+  left: 0;
+}
+
+[data-variant="blueprint"] .section-rule::after {
+  right: 0;
 }

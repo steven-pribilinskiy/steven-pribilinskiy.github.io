@@ -10,11 +10,7 @@ const [lede, ...rest] = aboutParagraphs;
   <div class="mt-12 lg:grid lg:grid-cols-[6rem_1fr]">
     <div></div>
     <div class="max-w-[65ch] space-y-6">
-      <p
-        class="first-letter:float-left first-letter:mt-1 first-letter:pr-3 first-letter:font-display first-letter:text-[4.2em] first-letter:leading-[0.75] first-letter:font-bold first-letter:text-accent"
-      >
-        {lede}
-      </p>
+      <p class="drop-cap">{lede}</p>
       {rest.slice(0, 1).map((paragraph) => <p>{paragraph}</p>)}
       <blockquote
         class="border-l-2 border-accent py-1 pl-6 font-display text-[1.75rem] leading-[1.3] font-medium text-ink italic"

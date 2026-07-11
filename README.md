@@ -28,7 +28,3 @@ All copy lives in typed data modules under `src/data/` (`identity`, `hero`, `sta
 ## Deploy
 
 Pushes to `main` deploy to GitHub Pages via `.github/workflows/deploy.yml`.
-
-## /lab
-
-`public/lab/` preserves the four original design-variant playgrounds that led to the current design. Served at `/lab/` (unlinked).
