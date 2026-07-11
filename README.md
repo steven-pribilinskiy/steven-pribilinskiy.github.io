@@ -1,29 +1,34 @@
-# Steven Pribilinskiy — Profile Site (Preliminary)
+# steven-pribilinskiy.github.io
 
-Multiple design playgrounds to pick a direction for `stevenpribilinskiy.com` (or similar).
+Personal profile site — a single editorial page: hero with a terminal session window, stats ledger, about, experience timeline, expertise index, contact.
 
-## How to use
+**Stack**: Astro + Tailwind CSS 4 + Biome. Static output, zero framework JS — the only scripts are the light/dark/system theme toggle and a years-since counter. Fonts (Fraunces, Inter, JetBrains Mono) self-hosted via Fontsource.
 
-Open `index.html` in a browser — it's a directory of the 4 variants with a short description + thumbnail for each. Click any to open the full playground. Each variant is a self-contained HTML file with:
+## Development
 
-- Live preview of the actual portfolio (real content — bio, flagship projects, skills)
-- A sidebar of controls to tweak the look (hue, density, font, theme)
-- A prompt at the bottom you can copy back to Claude to say "build this one"
+```bash
+npm install
+npm run dev        # dev server (port from astro.config.ts)
+npm run build      # production build to dist/
+npm run preview    # serve the production build
+```
 
-## Variants
+Quality gates — all must pass before pushing:
 
-1. **Son-inspired polished** (`variants/son-inspired.html`) — Riff on sonnguyenhoang.com: HSL-knob theming, Poppins, macOS-chrome hero window, accordion skills, dual-timeline. Warm, approachable, recruiter-friendly.
-2. **Editorial magazine** (`variants/editorial.html`) — Serif display (Fraunces), 65ch prose, hairline dividers, section numbering. Reads like a long-form profile piece.
-3. **Terminal / dev** (`variants/terminal.html`) — Full-viewport mono, phosphor-green prompt, `cat about.md` sections. For a builder/tooling-obsessed audience.
-4. **Glass futurist** (`variants/glass-futurist.html`) — Dark indigo, frosted cards, neon magenta + cyan, Space Grotesk. High-energy, agentic-AI vibe.
+```bash
+npm run check      # astro check (TypeScript)
+npm run lint       # biome
+npm run build
+```
 
-## Research
+## Content
 
-Three sources informed the content:
-- GitHub (`steven-pribilinskiy`, `stepan.prybylynskyi`) — flagship projects and recent focus
-- Cloudbeds Jira + git history — sanitized professional themes
-- sonnguyenhoang.com — design reference
+All copy lives in typed data modules under `src/data/` (`identity`, `hero`, `stats`, `about`, `experience`, `expertise`, `contact`) — components never contain prose. Design tokens live in `src/styles/global.css` (semantic oklch variables, flipped by the `.dark` class).
 
-## Next
+## Deploy
 
-Pick a variant → we replace this preliminary repo with a real build (Astro + React + Tailwind, probably — matches Steven's current stack).
+Pushes to `main` deploy to GitHub Pages via `.github/workflows/deploy.yml`.
+
+## /lab
+
+`public/lab/` preserves the four original design-variant playgrounds that led to the current design. Served at `/lab/` (unlinked).
