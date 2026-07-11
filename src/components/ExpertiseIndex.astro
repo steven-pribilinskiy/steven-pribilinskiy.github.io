@@ -1,0 +1,32 @@
+---
+import { expertise } from '../data/expertise';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="expertise" class="shell py-section">
+  <SectionHeading number="03" title="What I do." />
+  <div class="mt-12 lg:grid lg:grid-cols-[6rem_1fr]">
+    <div></div>
+    <ol>
+      {
+        expertise.map((area, index) => (
+          <li class="grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 border-b border-dashed border-rule py-7 first:border-t sm:grid-cols-[2.5rem_1fr_auto]">
+            <span class="font-mono text-meta text-muted tabular-nums">
+              {String(index + 1).padStart(3, '0')}
+            </span>
+            <div>
+              <h3 class="font-display text-entry font-semibold text-ink">{area.title}</h3>
+              <p class="mt-1.5 max-w-[58ch] text-small">{area.description}</p>
+              <span class="mt-2 block font-mono text-meta text-muted sm:hidden">
+                {area.artifacts}
+              </span>
+            </div>
+            <span class="hidden font-mono text-meta text-muted sm:block sm:text-right">
+              {area.artifacts}
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

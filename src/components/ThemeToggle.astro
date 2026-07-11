@@ -1,0 +1,95 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="relative grid size-9 shrink-0 place-items-center text-muted transition-colors hover:text-ink"
+  aria-label="Theme: system"
+>
+  <svg
+    class="theme-icon theme-icon-light absolute size-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4.25"></circle>
+    <path
+      d="M12 2.75v2.5M12 18.75v2.5M2.75 12h2.5M18.75 12h2.5M5.46 5.46l1.77 1.77M16.77 16.77l1.77 1.77M18.54 5.46l-1.77 1.77M7.23 16.77l-1.77 1.77"
+    ></path>
+  </svg>
+  <svg
+    class="theme-icon theme-icon-dark absolute size-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
+  </svg>
+  <svg
+    class="theme-icon theme-icon-system absolute size-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <rect x="3" y="4.5" width="18" height="12.5" rx="1.5"></rect>
+    <path d="M9 20.5h6M12 17v3.5"></path>
+  </svg>
+</button>
+
+<style is:global>
+  .theme-icon {
+    display: none;
+  }
+  [data-theme='light'] .theme-icon-light,
+  [data-theme='dark'] .theme-icon-dark,
+  [data-theme='system'] .theme-icon-system {
+    display: block;
+  }
+</style>
+
+<script>
+  const toggleButton = document.getElementById('theme-toggle');
+  const order = ['light', 'dark', 'system'] as const;
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const getChoice = () => localStorage.getItem('theme') ?? 'system';
+
+  const apply = (choice: string) => {
+    const dark = choice === 'dark' || (choice === 'system' && media.matches);
+    const root = document.documentElement;
+    root.classList.toggle('dark', dark);
+    root.dataset.theme = choice;
+    toggleButton?.setAttribute('aria-label', `Theme: ${choice}`);
+  };
+
+  toggleButton?.addEventListener('click', () => {
+    const currentIndex = order.indexOf(getChoice() as (typeof order)[number]);
+    const next = order[(currentIndex + 1) % order.length] ?? 'system';
+    if (next === 'system') {
+      localStorage.removeItem('theme');
+    } else {
+      localStorage.setItem('theme', next);
+    }
+    apply(next);
+  });
+
+  media.addEventListener('change', () => {
+    if (getChoice() === 'system') {
+      apply('system');
+    }
+  });
+
+  apply(getChoice());
+</script>

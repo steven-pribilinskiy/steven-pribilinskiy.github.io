@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .glyph { fill: oklch(21% 0.01 95); }
+    .dot { fill: oklch(55% 0.19 41); }
+    @media (prefers-color-scheme: dark) {
+      .glyph { fill: oklch(93% 0.012 92); }
+      .dot { fill: oklch(70% 0.15 45); }
+    }
+  </style>
+  <text x="6" y="50" class="glyph" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="600">S</text>
+  <rect x="44" y="42" width="10" height="10" class="dot" />
+</svg>

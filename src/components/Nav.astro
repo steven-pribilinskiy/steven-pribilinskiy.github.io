@@ -1,0 +1,31 @@
+---
+import { identity } from '../data/identity';
+import ThemeToggle from './ThemeToggle.astro';
+
+const links = [
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<nav class="sticky top-0 z-50 border-b border-rule bg-bg/85 backdrop-blur-[8px]">
+  <div class="shell flex h-14 items-center justify-between">
+    <a href="#top" class="font-display text-[15px] font-semibold text-ink">
+      {identity.name}
+    </a>
+    <div class="flex items-center gap-4 sm:gap-7">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="font-mono text-meta tracking-[0.12em] text-muted uppercase transition-colors hover:text-ink"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <ThemeToggle />
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,48 @@
+---
+import { contactLinks, email } from '../data/contact';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<footer id="contact" class="border-t-2 border-ink">
+  <div class="shell py-section">
+    <SectionHeading number="04" title="Correspondence." />
+    <div class="mt-12 gap-16 lg:grid lg:grid-cols-[6rem_1fr]">
+      <div></div>
+      <div class="flex flex-col gap-14 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <a
+            href={`mailto:${email}`}
+            class="font-display text-[clamp(1.5rem,1rem+2vw,2.5rem)] text-ink italic underline decoration-accent decoration-2 underline-offset-[6px] transition-colors hover:text-accent"
+          >
+            {email}
+          </a>
+          <div
+            class="mt-8 flex flex-wrap gap-x-7 gap-y-3 font-mono text-meta tracking-[0.12em] uppercase"
+          >
+            {
+              contactLinks
+                .filter((link) => link.external)
+                .map((link) => (
+                  <a
+                    href={link.href}
+                    rel="me noopener"
+                    class="text-accent transition-colors hover:text-ink"
+                  >
+                    {link.platform}
+                    <span class="inline-block w-[1.2em] text-center">↗</span>
+                  </a>
+                ))
+            }
+          </div>
+        </div>
+        <p class="max-w-[34ch] text-small text-muted">
+          Set in Fraunces, Inter &amp; JetBrains Mono. Built with Astro and Tailwind. No tracking,
+          no cookies.
+        </p>
+      </div>
+    </div>
+    <p class="mt-20 text-center font-mono text-meta text-muted">
+      — exit 0 · no cookies · no tracking —
+    </p>
+  </div>
+</footer>

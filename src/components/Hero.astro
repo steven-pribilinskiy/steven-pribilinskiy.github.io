@@ -1,0 +1,49 @@
+---
+import { contactLinks } from '../data/contact';
+import { hero } from '../data/hero';
+import SessionWindow from './SessionWindow.astro';
+
+const bylineLinks = contactLinks.map((link) => ({
+  label: link.platform,
+  href: link.href,
+  external: link.external,
+}));
+---
+
+<section id="top" class="shell flex min-h-[calc(100dvh-3.5rem)] items-center py-16">
+  <div class="grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+    <div>
+      <p class="font-mono text-kicker tracking-[0.22em] text-muted uppercase">
+        {hero.kicker}
+      </p>
+      <h1 class="mt-6 font-display text-display font-semibold text-ink">
+        {hero.headlineLead}
+        <em class="text-accent">{hero.headlineEmphasis}</em>
+      </h1>
+      <p class="mt-7 max-w-[46ch] font-display text-dek italic">
+        {hero.dek}
+      </p>
+      <div
+        class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-y border-rule py-4 font-mono text-meta tracking-[0.12em] uppercase"
+      >
+        {
+          bylineLinks.map((link) => (
+            <a
+              href={link.href}
+              class="text-accent transition-colors hover:text-ink"
+              rel={link.external ? 'me noopener' : undefined}
+            >
+              {link.label}
+              {link.external && <span class="inline-block w-[1.2em] text-center">↗</span>}
+            </a>
+          ))
+        }
+        <span class="ml-auto flex items-center gap-2 text-muted">
+          <span class="size-2 rounded-full bg-signal motion-safe:animate-pulse"></span>
+          status: {hero.status}
+        </span>
+      </div>
+    </div>
+    <SessionWindow />
+  </div>
+</section>

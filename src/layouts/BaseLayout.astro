@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import { contactLinks } from '../data/contact';
+import { identity } from '../data/identity';
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const { title = `${identity.name} — ${identity.title}`, description = identity.description } =
+  Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: identity.name,
+  jobTitle: identity.title,
+  worksFor: { '@type': 'Organization', name: identity.company },
+  address: { '@type': 'PostalAddress', addressLocality: 'Budapest', addressCountry: 'HU' },
+  url: Astro.site?.href,
+  sameAs: contactLinks.filter((link) => link.external).map((link) => link.href),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      (() => {
+        const choice = localStorage.getItem('theme') ?? 'system';
+        const dark =
+          choice === 'dark' ||
+          (choice === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        const root = document.documentElement;
+        root.classList.toggle('dark', dark);
+        root.dataset.theme = choice;
+      })();
+    </script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  </head>
+  <body class="bg-bg font-body text-body text-prose">
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,29 @@
+---
+import { experience } from '../data/experience';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="experience" class="shell py-section">
+  <SectionHeading number="02" title="Selected engagements." />
+  <div class="mt-12 lg:grid lg:grid-cols-[6rem_1fr]">
+    <div></div>
+    <ol>
+      {
+        experience.map((entry) => (
+          <li class="grid gap-x-6 gap-y-2 border-b border-rule py-8 first:border-t sm:grid-cols-[9rem_1fr]">
+            <span class="pt-1 font-mono text-meta tracking-[0.12em] text-muted uppercase tabular-nums">
+              {entry.period}
+            </span>
+            <div>
+              <h3 class="font-display text-[1.1875rem] font-semibold text-ink">
+                {entry.role}
+                <span class="font-medium text-accent"> · {entry.org}</span>
+              </h3>
+              <p class="mt-2 max-w-[58ch] text-small">{entry.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

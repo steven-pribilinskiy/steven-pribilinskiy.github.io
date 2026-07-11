@@ -1,0 +1,16 @@
+---
+type Props = {
+  number: string;
+  title: string;
+};
+
+const { number, title } = Astro.props;
+---
+
+<header class="section-head grid gap-5 lg:grid-cols-[6rem_1fr] lg:gap-0">
+  <div>
+    <span class="font-mono text-kicker tracking-[0.22em] text-accent uppercase">{number}</span>
+    <div class="section-rule mt-2 h-0.5 bg-accent"></div>
+  </div>
+  <h2 class="font-display text-title font-semibold text-ink">{title}</h2>
+</header>
