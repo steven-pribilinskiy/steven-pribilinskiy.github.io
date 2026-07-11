@@ -1,5 +1,21 @@
 ---
 import { variants } from '../data/appearance';
+
+const schemeOptions = [
+  { id: 'light', label: 'Light' },
+  { id: 'dark', label: 'Dark' },
+  { id: 'system', label: 'System' },
+];
+
+const toneGroups = variants.flatMap((variant) =>
+  (['light', 'dark'] as const)
+    .map((scheme) => ({
+      variantId: variant.id,
+      scheme,
+      tones: variant.tones.filter((tone) => tone.scheme === scheme),
+    }))
+    .filter((group) => group.tones.length > 1),
+);
 ---
 
 <button
@@ -32,7 +48,7 @@ import { variants } from '../data/appearance';
 >
   <p class="font-display text-[15px] font-semibold text-ink">Appearance</p>
   <p class="mt-1 text-[13px] leading-snug text-muted">
-    Pick a design and a tone. Saved in your browser only.
+    Pick a design and a scheme. Saved in your browser only.
   </p>
 
   <div class="mt-4 flex flex-col gap-1" role="radiogroup" aria-label="Design variant">
@@ -55,39 +71,49 @@ import { variants } from '../data/appearance';
     }
   </div>
 
-  <div class="mt-4 border-t border-rule pt-4">
+  <div
+    class="mt-4 flex flex-wrap gap-2 border-t border-rule pt-4"
+    role="radiogroup"
+    aria-label="Color scheme"
+  >
     {
-      variants.map((variant) => (
-        <div
-          data-tone-group={variant.id}
-          class="tone-group hidden flex-wrap gap-2"
-          role="radiogroup"
-          aria-label={`${variant.label} tone`}
+      schemeOptions.map((scheme) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-scheme-option={scheme.id}
+          class="appearance-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
         >
+          {scheme.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    toneGroups.map((group) => (
+      <div
+        data-tone-group={`${group.variantId}:${group.scheme}`}
+        class="tone-group mt-3 hidden flex-wrap items-center gap-2"
+        role="radiogroup"
+        aria-label={`${group.variantId} ${group.scheme} tone`}
+      >
+        <span class="font-mono text-[10.5px] tracking-[0.12em] text-muted uppercase">tone</span>
+        {group.tones.map((tone) => (
           <button
             type="button"
             role="radio"
             aria-checked="false"
-            data-tone-option="system"
-            class="tone-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
+            data-tone-option={tone.id}
+            class="appearance-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
           >
-            System
+            {tone.label}
           </button>
-          {variant.tones.map((tone) => (
-            <button
-              type="button"
-              role="radio"
-              aria-checked="false"
-              data-tone-option={tone.id}
-              class="tone-chip rounded-chip border border-rule px-3 py-1.5 font-mono text-[11.5px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
-            >
-              {tone.label}
-            </button>
-          ))}
-        </div>
-      ))
-    }
-  </div>
+        ))}
+      </div>
+    ))
+  }
 
   <div class="mt-4 flex items-center justify-between border-t border-rule pt-4">
     <button
@@ -114,20 +140,13 @@ import { variants } from '../data/appearance';
     background: transparent;
   }
 
-  /* Show only the active variant's tone group. */
-  :global([data-variant='editorial']) .tone-group[data-tone-group='editorial'],
-  :global([data-variant='terminal']) .tone-group[data-tone-group='terminal'],
-  :global([data-variant='blueprint']) .tone-group[data-tone-group='blueprint'] {
-    display: flex;
-  }
-
   .variant-option[aria-checked='true'] .radio-dot {
     border-color: var(--accent);
     background: var(--accent);
     box-shadow: inset 0 0 0 2.5px var(--surface);
   }
 
-  .tone-chip[aria-checked='true'] {
+  .appearance-chip[aria-checked='true'] {
     border-color: var(--accent);
     color: var(--ink);
   }
@@ -136,11 +155,13 @@ import { variants } from '../data/appearance';
 <script>
   import { appearanceMap, defaultVariantId, storageKeys } from '../data/appearance';
 
+  type Scheme = 'light' | 'dark';
+  type VariantConfig = Record<Scheme, string[]>;
+
   const root = document.documentElement;
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   const popover = document.getElementById('appearance-popover');
 
-  type VariantConfig = { systemPair: [string, string]; schemes: Record<string, string> };
   const configFor = (variantId: string) =>
     (appearanceMap as Record<string, VariantConfig>)[variantId];
 
@@ -149,32 +170,53 @@ import { variants } from '../data/appearance';
     return stored && configFor(stored) ? stored : defaultVariantId;
   };
 
-  const currentChoice = (variantId: string) => {
-    const stored = localStorage.getItem(storageKeys.tone(variantId));
-    return stored && configFor(variantId).schemes[stored] ? stored : 'system';
+  const currentSchemeChoice = () => {
+    const stored = localStorage.getItem(storageKeys.scheme);
+    return stored === 'light' || stored === 'dark' ? stored : 'system';
+  };
+
+  const resolveScheme = (choice: string): Scheme =>
+    choice === 'system' ? (media.matches ? 'dark' : 'light') : (choice as Scheme);
+
+  const currentTone = (variantId: string, scheme: Scheme) => {
+    const tonePool = configFor(variantId)[scheme];
+    const stored = localStorage.getItem(storageKeys.tone(variantId, scheme));
+    return stored && tonePool.includes(stored) ? stored : tonePool[0];
   };
 
   const apply = () => {
     const variantId = currentVariant();
-    const config = configFor(variantId);
-    const choice = currentChoice(variantId);
-    const toneId =
-      choice === 'system' ? config.systemPair[media.matches ? 1 : 0] : choice;
+    const schemeChoice = currentSchemeChoice();
+    const scheme = resolveScheme(schemeChoice);
+    const toneId = currentTone(variantId, scheme);
     root.dataset.variant = variantId;
     root.dataset.tone = toneId;
-    root.dataset.toneChoice = choice;
-    root.classList.toggle('dark', config.schemes[toneId] === 'dark');
-    syncControls(variantId, choice);
+    root.dataset.schemeChoice = schemeChoice;
+    root.classList.toggle('dark', scheme === 'dark');
+    syncControls(variantId, schemeChoice, scheme, toneId);
   };
 
-  const syncControls = (variantId: string, choice: string) => {
+  const syncControls = (
+    variantId: string,
+    schemeChoice: string,
+    scheme: Scheme,
+    toneId: string | undefined,
+  ) => {
     for (const option of document.querySelectorAll<HTMLElement>('[data-variant-option]')) {
       option.setAttribute('aria-checked', String(option.dataset.variantOption === variantId));
     }
-    const activeGroup = document.querySelector(`[data-tone-group='${variantId}']`);
-    if (!activeGroup) return;
-    for (const chip of activeGroup.querySelectorAll<HTMLElement>('[data-tone-option]')) {
-      chip.setAttribute('aria-checked', String(chip.dataset.toneOption === choice));
+    for (const option of document.querySelectorAll<HTMLElement>('[data-scheme-option]')) {
+      option.setAttribute('aria-checked', String(option.dataset.schemeOption === schemeChoice));
+    }
+    const activeGroupId = `${variantId}:${scheme}`;
+    for (const group of document.querySelectorAll<HTMLElement>('[data-tone-group]')) {
+      const isActive = group.dataset.toneGroup === activeGroupId;
+      group.classList.toggle('hidden', !isActive);
+      group.classList.toggle('flex', isActive);
+      if (!isActive) continue;
+      for (const chip of group.querySelectorAll<HTMLElement>('[data-tone-option]')) {
+        chip.setAttribute('aria-checked', String(chip.dataset.toneOption === toneId));
+      }
     }
   };
 
@@ -187,18 +229,27 @@ import { variants } from '../data/appearance';
     });
   }
 
+  for (const option of document.querySelectorAll<HTMLElement>('[data-scheme-option]')) {
+    option.addEventListener('click', () => {
+      const choice = option.dataset.schemeOption;
+      if (!choice) return;
+      if (choice === 'system') {
+        localStorage.removeItem(storageKeys.scheme);
+      } else {
+        localStorage.setItem(storageKeys.scheme, choice);
+      }
+      apply();
+    });
+  }
+
   for (const group of document.querySelectorAll<HTMLElement>('[data-tone-group]')) {
-    const variantId = group.dataset.toneGroup;
-    if (!variantId) continue;
+    const [variantId, scheme] = (group.dataset.toneGroup ?? '').split(':');
+    if (!variantId || (scheme !== 'light' && scheme !== 'dark')) continue;
     for (const chip of group.querySelectorAll<HTMLElement>('[data-tone-option]')) {
       chip.addEventListener('click', () => {
-        const choice = chip.dataset.toneOption;
-        if (!choice) return;
-        if (choice === 'system') {
-          localStorage.removeItem(storageKeys.tone(variantId));
-        } else {
-          localStorage.setItem(storageKeys.tone(variantId), choice);
-        }
+        const toneId = chip.dataset.toneOption;
+        if (!toneId) return;
+        localStorage.setItem(storageKeys.tone(variantId, scheme), toneId);
         apply();
       });
     }
@@ -217,7 +268,7 @@ import { variants } from '../data/appearance';
   });
 
   media.addEventListener('change', () => {
-    if (currentChoice(currentVariant()) === 'system') apply();
+    if (currentSchemeChoice() === 'system') apply();
   });
 
   popover?.addEventListener('toggle', apply);

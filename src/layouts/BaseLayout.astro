@@ -28,7 +28,7 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang="en" data-variant="editorial" data-tone="paper" data-tone-choice="system">
+<html lang="en" data-variant="editorial" data-tone="paper" data-scheme-choice="system">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,14 +48,17 @@ const personSchema = {
         const storedVariant = localStorage.getItem('appearance:variant');
         const variantId = appearanceMap[storedVariant] ? storedVariant : defaultVariantId;
         const config = appearanceMap[variantId];
-        const choice = localStorage.getItem(`appearance:tone:${variantId}`) ?? 'system';
+        const storedScheme = localStorage.getItem('appearance:scheme');
+        const schemeChoice = storedScheme === 'light' || storedScheme === 'dark' ? storedScheme : 'system';
         const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
-        const toneId = config.schemes[choice] ? choice : config.systemPair[prefersDark ? 1 : 0];
+        const scheme = schemeChoice === 'system' ? (prefersDark ? 'dark' : 'light') : schemeChoice;
+        const storedTone = localStorage.getItem(`appearance:tone:${variantId}:${scheme}`);
+        const toneId = config[scheme].includes(storedTone) ? storedTone : config[scheme][0];
         const root = document.documentElement;
         root.dataset.variant = variantId;
         root.dataset.tone = toneId;
-        root.dataset.toneChoice = config.schemes[choice] ? choice : 'system';
-        root.classList.toggle('dark', config.schemes[toneId] === 'dark');
+        root.dataset.schemeChoice = schemeChoice;
+        root.classList.toggle('dark', scheme === 'dark');
       })();
     </script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
