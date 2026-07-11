@@ -11,14 +11,15 @@ const bylineLinks = contactLinks.map((link) => ({
 ---
 
 <section id="top" class="shell flex min-h-[calc(100dvh-3.5rem)] items-center py-16">
-  <div class="grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-    <div>
+  <div
+    class="grid w-full items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16"
+  >
+    <div class="min-w-0">
       <p class="font-mono text-kicker tracking-[0.22em] text-muted uppercase">
         {hero.kicker}
       </p>
       <h1 class="mt-6 font-display text-display font-semibold text-ink">
-        {hero.headlineLead}
-        <em class="text-accent">{hero.headlineEmphasis}</em>
+        {`${hero.headlineLead} `}<em class="text-accent">{hero.headlineEmphasis}</em>
       </h1>
       <p class="mt-7 max-w-[46ch] font-display text-dek italic">
         {hero.dek}

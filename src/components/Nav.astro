@@ -11,15 +11,18 @@ const links = [
 
 <nav class="sticky top-0 z-50 border-b border-rule bg-bg/85 backdrop-blur-[8px]">
   <div class="shell flex h-14 items-center justify-between">
-    <a href="#top" class="font-display text-[15px] font-semibold text-ink">
+    <a href="#top" class="font-display text-[15px] font-semibold whitespace-nowrap text-ink">
       {identity.name}
     </a>
     <div class="flex items-center gap-4 sm:gap-7">
       {
-        links.map((link) => (
+        links.map((link, index) => (
           <a
             href={link.href}
-            class="font-mono text-meta tracking-[0.12em] text-muted uppercase transition-colors hover:text-ink"
+            class:list={[
+              'font-mono text-meta tracking-[0.12em] text-muted uppercase transition-colors hover:text-ink',
+              index < links.length - 1 && 'hidden sm:inline',
+            ]}
           >
             {link.label}
           </a>

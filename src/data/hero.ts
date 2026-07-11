@@ -13,7 +13,7 @@ export const hero: HeroContent = {
     { kind: 'field', key: 'company', value: 'Cloudbeds' },
     { kind: 'field', key: 'focus', value: 'developer tooling · agentic AI · micro-frontends' },
     { kind: 'field', key: 'stack', value: 'TypeScript · Bun · Go · Rust' },
-    { kind: 'field', key: 'shipped', value: '30+ projects', comment: '# last 6 months' },
+    { kind: 'field', key: 'since', value: '2012' },
     { kind: 'cursor' },
   ],
 };
