@@ -10,9 +10,21 @@ export const contactLinks: ContactLink[] = [
     external: true,
   },
   {
+    platform: 'LinkedIn',
+    label: 'linkedin.com/in/pribilinskiy',
+    href: 'https://www.linkedin.com/in/pribilinskiy/',
+    external: true,
+  },
+  {
     platform: 'npm',
     label: 'npmjs.com/~stevenp',
     href: 'https://www.npmjs.com/~stevenp',
+    external: true,
+  },
+  {
+    platform: 'X',
+    label: 'x.com/pribilinskiy',
+    href: 'https://x.com/pribilinskiy',
     external: true,
   },
   {
