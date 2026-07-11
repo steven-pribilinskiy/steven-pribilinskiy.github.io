@@ -24,7 +24,7 @@
   --surface: oklch(21.5% 0.008 95);
   --ink: oklch(93% 0.012 92);
   --prose: oklch(76% 0.014 95);
-  --muted: oklch(59% 0.012 95);
+  --muted: oklch(62% 0.012 95);
   --rule: oklch(29% 0.01 95);
   --accent: oklch(70% 0.15 45);
   --accent-soft: oklch(28% 0.05 45);
@@ -107,6 +107,16 @@
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
     -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
