@@ -11,7 +11,7 @@ export const hero: HeroContent = {
     { kind: 'prompt', command: 'whoami' },
     { kind: 'field', key: 'role', value: 'Senior Staff Engineer' },
     { kind: 'field', key: 'company', value: 'Cloudbeds' },
-    { kind: 'field', key: 'focus', value: 'dev tooling · agentic AI · micro-frontends' },
+    { kind: 'field', key: 'focus', value: 'DX tooling · agentic AI · microapps' },
     { kind: 'field', key: 'stack', value: 'TypeScript · Bun · Go · Rust' },
     { kind: 'field', key: 'since', value: '2012' },
     { kind: 'cursor' },
